@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "capsule_id": "DL69-2025-2610003343",
+    "sealed_until": "2026-01-02T00:00:00Z",
+    "created_at": "2025-10-26T00:33:43.3312395+03:00"
+  },
+  "challenge": {
+    "name": "Dual Legacy 69 Challenge",
+    "start_date": "25.10.2025",
+    "duration": 69,
+    "phases": [
+      "Retro Resurrection",
+      "Binary Evolution",
+      "Future Legacy"
+    ],
+    "target_programs": 69,
+    "legacy_goal": "Bridge between computing eras through code"
+  },
+  "tech_stack": {
+    "past_technologies": [
+      "MS-DOS",
+      "Pascal",
+      "Assembly",
+      "Windows 98",
+      "Dial-up Modem"
+    ],
+    "current_technologies": [
+      "Go",
+      "Docker",
+      "Kubernetes",
+      "AI/ML",
+      "Cloud Computing"
+    ],
+    "future_technologies": [
+      "Quantum Computing",
+      "AGI",
+      "Neural Interfaces",
+      "Digital Immortality"
+    ]
+  },
+  "personal_message": {
+    "to_future_self": "Remember the sound of the 56k modem and the magic of first 'Hello World'",
+    "motivation": "To preserve 25 years of computing history while building the future",
+    "promise": "I will complete all 69 days and create something meaningful for the next generation"
+  },
+  "timestamp": "2025-10-26T00:33:43.3312395+03:00"
+}
