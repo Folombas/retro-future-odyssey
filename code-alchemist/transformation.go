@@ -56,7 +56,7 @@ func (t *TransmutationEngine) StartTransmutation(totalHours int) {
 		"Синтез новых нейронных связей...",
 	}
 
-	for i, stage := range stages {
+	for _, stage := range stages {
 		fmt.Printf("   %s", stage)
 		// Анимация загрузки
 		for j := 0; j < 3; j++ {
@@ -130,4 +130,3 @@ func (p *TransformationProgress) UpdateTransformation(hoursTransformed int, skil
 		p.CurrentAddiction = 0
 	}
 }
-

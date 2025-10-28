@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-	"strconv"
 )
 
 type CodeAlchemist struct {
@@ -101,7 +100,7 @@ func (c *CodeAlchemist) AnalyzeGamingLegacy() {
 	fmt.Println("============================")
 
 	totalHours := 0
-	for i, era := range c.GamingHistory {
+	for _, era := range c.GamingHistory {
 		fmt.Printf("\n🎮 Эпоха %s:\n", era.Years)
 		fmt.Printf("   Игры: %v\n", era.Games)
 		fmt.Printf("   Часов: %d\n", era.Hours)
@@ -244,4 +243,3 @@ func pressToContinue() {
 	fmt.Println("\n↵ Нажми Enter чтобы продолжить...")
 	fmt.Scanln()
 }
-
