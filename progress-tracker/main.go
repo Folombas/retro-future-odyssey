@@ -6,7 +6,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type ProgressTracker struct {
@@ -74,4 +73,3 @@ func (p *ProgressTracker) getUserInput() int {
 
 	return day
 }
-
