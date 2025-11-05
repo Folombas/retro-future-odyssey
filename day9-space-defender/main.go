@@ -11,6 +11,7 @@ func main() {
 
 	ebiten.SetWindowSize(800, 600)
 	ebiten.SetWindowTitle("🚀 Space Defender - Digital Transformation")
+	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeDisabled)
 
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
