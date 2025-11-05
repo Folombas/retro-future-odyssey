@@ -2,30 +2,34 @@ package main
 
 import (
 	"image/color"
+	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 type Game struct {
-	player *Player
-	enemies []*Enemy
-	score int
+	player   *Player
+	enemies  []*Enemy
+	score    int
+	lastSpawn time.Time
 }
 
 func NewGame() *Game {
 	return &Game{
-		player: NewPlayer(),
-		score: 0,
+		player:    NewPlayer(),
+		score:     0,
+		lastSpawn: time.Now(),
 	}
 }
 
 func (g *Game) Update() error {
 	g.player.Update()
 
-	// Спавн врагов
-	if len(g.enemies) < 5 && ebiten.Now()%60 == 0 {
+	// Спавн врагов каждые 2 секунды
+	if time.Since(g.lastSpawn) > 2*time.Second && len(g.enemies) < 5 {
 		g.enemies = append(g.enemies, NewEnemy())
+		g.lastSpawn = time.Now()
 	}
 
 	// Обновление врагов
