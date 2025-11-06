@@ -76,12 +76,13 @@ func (m *Menu) Draw(screen *ebiten.Image) {
 
 		// Выделение выбранной опции
 		if i == m.selected {
-			// Анимация выделения
-			scale := 1.0 + math.Sin(m.animationTime*5)*0.1
-			ebitenutil.DebugPrintAt(screen, "▶ "+option, 300, int(y))
+			// Анимация стрелки (пульсирующее смещение)
+			arrowOffset := math.Sin(m.animationTime*5) * 3
+			ebitenutil.DebugPrintAt(screen, "▶ "+option, 300 + int(arrowOffset), int(y))
 
-			// Подсветка
-			vector.DrawFilledRect(screen, 290, float32(y)-5, 400, 30, color.RGBA{255, 255, 255, 30}, false)
+			// Подсветка с пульсирующей прозрачностью
+			alpha := uint8(30 + math.Sin(m.animationTime*5)*15)
+			vector.DrawFilledRect(screen, 290, float32(y)-5, 400, 30, color.RGBA{255, 255, 255, alpha}, false)
 		} else {
 			ebitenutil.DebugPrintAt(screen, "  "+option, 300, int(y))
 		}
