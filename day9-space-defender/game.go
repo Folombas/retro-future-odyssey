@@ -11,38 +11,51 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
+type GameState int
+
+const (
+	StateMenu GameState = iota
+	StatePlaying
+	StateGameOver
+)
+
 type Game struct {
 	player    *Player
 	enemies   []*Enemy
 	bullets   []*Bullet
+	menu      *Menu
 	score     int
+	highScore int
 	lastSpawn time.Time
-	gameOver  bool
+	state     GameState
 }
 
 func NewGame() *Game {
 	return &Game{
 		player:    NewPlayer(),
+		menu:      NewMenu(),
 		score:     0,
-		lastSpawn: time.Now(),
-		gameOver:  false,
+		highScore: 0,
+		state:     StateMenu,
 	}
 }
 
 func (g *Game) Update() error {
-	if g.gameOver {
+	switch g.state {
+	case StateMenu:
+		g.menu.Update(g)
+	case StatePlaying:
+		g.updateGame()
+	case StateGameOver:
 		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
-			// Рестарт игры
-			g.player = NewPlayer()
-			g.enemies = nil
-			g.bullets = nil
-			g.score = 0
-			g.gameOver = false
-			g.lastSpawn = time.Now()
+			g.state = StateMenu
 		}
-		return nil
 	}
 
+	return nil
+}
+
+func (g *Game) updateGame() {
 	g.player.Update(g)
 
 	// Спавн врагов каждые 1.5 секунды
@@ -57,8 +70,11 @@ func (g *Game) Update() error {
 
 		// Проверка столкновения с игроком
 		if g.CheckCollision(g.player, g.enemies[i]) {
-			g.gameOver = true
-			return nil
+			g.state = StateGameOver
+			if g.score > g.highScore {
+				g.highScore = g.score
+			}
+			return
 		}
 
 		// Удаление врагов за экраном
@@ -88,11 +104,20 @@ func (g *Game) Update() error {
 			}
 		}
 	}
-
-	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	switch g.state {
+	case StateMenu:
+		g.menu.Draw(screen)
+	case StatePlaying:
+		g.drawGame(screen)
+	case StateGameOver:
+		g.drawGameOver(screen)
+	}
+}
+
+func (g *Game) drawGame(screen *ebiten.Image) {
 	// Космический фон
 	screen.Fill(color.RGBA{0, 0, 25, 255})
 
@@ -117,15 +142,21 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	// Интерфейс
-	scoreText := fmt.Sprintf("🎯 Score: %d", g.score)
+	scoreText := fmt.Sprintf("🎯 Score: %d | 🏆 Best: %d", g.score, g.highScore)
 	ebitenutil.DebugPrint(screen, scoreText)
-	ebitenutil.DebugPrintAt(screen, "🚀 ARROWS: Move | SPACE: Shoot | ESC: Quit", 10, 580)
+	ebitenutil.DebugPrintAt(screen, "🚀 ARROWS: Move | SPACE: Shoot | ESC: Menu", 10, 580)
+}
 
-	if g.gameOver {
-		ebitenutil.DebugPrintAt(screen, "💀 GAME OVER! Press SPACE to restart", 250, 280)
-		finalScore := fmt.Sprintf("🎯 Final Score: %d", g.score)
-		ebitenutil.DebugPrintAt(screen, finalScore, 320, 300)
-	}
+func (g *Game) drawGameOver(screen *ebiten.Image) {
+	g.drawGame(screen)
+
+	// Полупрозрачный overlay
+	vector.DrawFilledRect(screen, 0, 0, 800, 600, color.RGBA{0, 0, 0, 180}, false)
+
+	ebitenutil.DebugPrintAt(screen, "💀 GAME OVER", 320, 250)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("🎯 Final Score: %d", g.score), 310, 280)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("🏆 Best Score: %d", g.highScore), 310, 300)
+	ebitenutil.DebugPrintAt(screen, "Press SPACE to return to menu", 280, 350)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
@@ -141,4 +172,12 @@ func (g *Game) CheckCollision(a, b Collider) bool {
 
 func (g *Game) AddBullet(bullet *Bullet) {
 	g.bullets = append(g.bullets, bullet)
+}
+
+func (g *Game) Reset() {
+	g.player = NewPlayer()
+	g.enemies = nil
+	g.bullets = nil
+	g.score = 0
+	g.lastSpawn = time.Now()
 }
