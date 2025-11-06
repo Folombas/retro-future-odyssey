@@ -43,7 +43,7 @@ func (p *Player) Update(game *Game) {
 
 	// Стрельба пробелом
 	if ebiten.IsKeyPressed(ebiten.KeySpace) {
-		if time.Since(p.lastShot) > 200*time.Millisecond { // Ограничение скорости стрельбы (200ms)
+		if time.Since(p.lastShot) > 200*time.Millisecond {
 			bullet := NewBullet(p.X + p.Width/2, p.Y)
 			game.AddBullet(bullet)
 			p.lastShot = time.Now()
